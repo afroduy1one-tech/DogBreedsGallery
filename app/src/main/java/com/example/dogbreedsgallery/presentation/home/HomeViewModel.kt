@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dogbreedsgallery.data.local.BreedEntity
 import com.example.dogbreedsgallery.data.repository.BreedRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -23,6 +26,9 @@ class HomeViewModel(
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
+
+    private val _uiEvents = MutableSharedFlow<String>()
+    val uiEvents: SharedFlow<String> = _uiEvents.asSharedFlow()
 
     val breeds: StateFlow<List<BreedEntity>> =
         combine(
@@ -58,7 +64,12 @@ class HomeViewModel(
             try {
                 repository.refreshBreeds()
             } catch (exception: Exception) {
-                _error.value = exception.message ?: "Не удалось загрузить породы"
+                val message = exception.message ?: "Не удалось загрузить породы"
+                _error.value = message
+
+                if (breeds.value.isNotEmpty()) {
+                    _uiEvents.emit(message)
+                }
             } finally {
                 _isLoading.value = false
             }
