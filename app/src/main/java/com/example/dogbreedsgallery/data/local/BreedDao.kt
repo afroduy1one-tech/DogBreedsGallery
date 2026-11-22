@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BreedDao {
 
+    @Query("SELECT id FROM breeds WHERE isFavorite = 1")
+    suspend fun getFavoriteBreedIds(): List<Int>
+
     @Query("SELECT * FROM breeds ORDER BY name ASC")
     fun getAllBreeds(): Flow<List<BreedEntity>>
 

@@ -101,7 +101,10 @@ class MainActivity : ComponentActivity() {
                                         key = { breed -> breed.id }
                                     ) { breed ->
                                         BreedCard(
-                                            breed = breed
+                                            breed = breed,
+                                            onFavoriteClick = {
+                                                homeViewModel.toggleFavorite(breed)
+                                            }
                                         )
                                     }
                                 }

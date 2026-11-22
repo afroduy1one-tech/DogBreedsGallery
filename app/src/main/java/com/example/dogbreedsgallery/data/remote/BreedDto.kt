@@ -16,6 +16,7 @@ data class BreedDto(
     val weight: MeasurementDto?,
     val height: MeasurementDto?,
     val image: BreedImageDto?
+
 )
 
 data class MeasurementDto(

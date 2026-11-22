@@ -25,6 +25,7 @@ class BreedRepository(
     suspend fun refreshBreeds() {
         val remoteBreeds = dogApiService.getBreeds()
 
+        val favoriteIds = breedDao.getFavoriteBreedIds().toSet()
         val localBreeds = remoteBreeds.map { breed ->
             BreedEntity(
                 id = breed.id,
@@ -36,7 +37,8 @@ class BreedRepository(
                 origin = breed.origin,
                 weightMetric = breed.weight?.metric,
                 heightMetric = breed.height?.metric,
-                imageUrl = breed.image?.url
+                imageUrl = breed.image?.url,
+                isFavorite = breed.id in favoriteIds
             )
         }
 
