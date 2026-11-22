@@ -19,9 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.dogbreedsgallery.presentation.home.BreedCard
 import com.example.dogbreedsgallery.presentation.home.HomeViewModel
 import com.example.dogbreedsgallery.presentation.home.HomeViewModelFactory
 import com.example.dogbreedsgallery.ui.theme.DogBreedsGalleryTheme
+
 
 class MainActivity : ComponentActivity() {
 
@@ -72,16 +74,18 @@ class MainActivity : ComponentActivity() {
 
                             else -> {
                                 LazyColumn(
-                                    modifier = Modifier.fillMaxSize()
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalArrangement = Arrangement.spacedBy(12.dp)
                                 ) {
                                     items(
                                         items = breeds,
                                         key = { breed -> breed.id }
                                     ) { breed ->
-                                        Text(
-                                            text = breed.name,
-                                            modifier = Modifier.padding(8.dp)
+                                        BreedCard(
+                                            breed = breed
                                         )
+                                    }
+                                }
                                     }
                                 }
                             }
@@ -90,5 +94,3 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
