@@ -2,6 +2,7 @@ package com.example.dogbreedsgallery.data.repository
 
 import com.example.dogbreedsgallery.data.local.BreedDao
 import com.example.dogbreedsgallery.data.local.BreedEntity
+import com.example.dogbreedsgallery.data.remote.BreedImageResponseDto
 import com.example.dogbreedsgallery.data.remote.DogApiService
 import kotlinx.coroutines.flow.Flow
 
@@ -43,6 +44,13 @@ class BreedRepository(
         }
 
         breedDao.insertBreeds(localBreeds)
+    }
+
+    suspend fun getBreedImages(breedId: Int): List<BreedImageResponseDto> {
+        return dogApiService.getBreedImages(
+            breedId = breedId,
+            limit = 20
+        )
     }
 
     suspend fun updateFavoriteStatus(

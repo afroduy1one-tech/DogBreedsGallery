@@ -15,7 +15,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.example.dogbreedsgallery.data.repository.BreedRepository
 import com.example.dogbreedsgallery.presentation.favorites.FavoritesScreen
 import com.example.dogbreedsgallery.presentation.home.HomeScreen
-
+import com.example.dogbreedsgallery.presentation.details.BreedDetailsScreen
 
 @Composable
 fun AppNavigation(repository: BreedRepository) {
@@ -71,7 +71,10 @@ fun AppNavigation(repository: BreedRepository) {
                 }
 
                 addEntryProvider(DetailsRoute::class) { key ->
-                    Text("Детали породы: ${key.breedId}")
+                    BreedDetailsScreen(
+                        repository = repository,
+                        breedId = key.breedId
+                    )
                 }
             },
             modifier = Modifier.padding(innerPadding)
