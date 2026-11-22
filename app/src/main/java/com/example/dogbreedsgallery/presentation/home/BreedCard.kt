@@ -23,15 +23,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.dogbreedsgallery.data.local.BreedEntity
+import androidx.compose.foundation.clickable
 
 @Composable
 fun BreedCard(
     breed: BreedEntity,
     onFavoriteClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 3.dp
         )
