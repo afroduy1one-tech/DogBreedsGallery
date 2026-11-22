@@ -1,32 +1,36 @@
+
 package com.example.dogbreedsgallery.data.repository
 
-import com.example.dogbreedsgallery.data.local.BreedDao
+import com.example.dogbreedsgallery.data.datasource.LocalDataSource
+import com.example.dogbreedsgallery.data.datasource.RemoteDataSource
 import com.example.dogbreedsgallery.data.local.BreedEntity
 import com.example.dogbreedsgallery.data.remote.BreedImageResponseDto
-import com.example.dogbreedsgallery.data.remote.DogApiService
 import kotlinx.coroutines.flow.Flow
 
 class BreedRepository(
-    private val breedDao: BreedDao,
-    private val dogApiService: DogApiService
+    private val localDataSource: LocalDataSource,
+    private val remoteDataSource: RemoteDataSource
 ) {
 
     fun getAllBreeds(): Flow<List<BreedEntity>> {
-        return breedDao.getAllBreeds()
+        return localDataSource.getAllBreeds()
     }
 
     fun getFavoriteBreeds(): Flow<List<BreedEntity>> {
-        return breedDao.getFavoriteBreeds()
+        return localDataSource.getFavoriteBreeds()
     }
 
     fun getBreedById(breedId: Int): Flow<BreedEntity?> {
-        return breedDao.getBreedById(breedId)
+        return localDataSource.getBreedById(breedId)
     }
 
     suspend fun refreshBreeds() {
-        val remoteBreeds = dogApiService.getBreeds()
+        val remoteBreeds = remoteDataSource.getBreeds()
 
-        val favoriteIds = breedDao.getFavoriteBreedIds().toSet()
+        val favoriteIds = localDataSource
+            .getFavoriteBreedIds()
+            .toSet()
+
         val localBreeds = remoteBreeds.map { breed ->
             BreedEntity(
                 id = breed.id,
@@ -43,11 +47,13 @@ class BreedRepository(
             )
         }
 
-        breedDao.insertBreeds(localBreeds)
+        localDataSource.insertBreeds(localBreeds)
     }
 
-    suspend fun getBreedImages(breedId: Int): List<BreedImageResponseDto> {
-        return dogApiService.getBreedImages(
+    suspend fun getBreedImages(
+        breedId: Int
+    ): List<BreedImageResponseDto> {
+        return remoteDataSource.getBreedImages(
             breedId = breedId,
             limit = 20
         )
@@ -57,6 +63,9 @@ class BreedRepository(
         breedId: Int,
         isFavorite: Boolean
     ) {
-        breedDao.updateFavoriteStatus(breedId, isFavorite)
+        localDataSource.updateFavoriteStatus(
+            breedId = breedId,
+            isFavorite = isFavorite
+        )
     }
 }
