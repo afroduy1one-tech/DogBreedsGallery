@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,6 +24,8 @@ import com.example.dogbreedsgallery.presentation.home.BreedCard
 import com.example.dogbreedsgallery.presentation.home.HomeViewModel
 import com.example.dogbreedsgallery.presentation.home.HomeViewModelFactory
 import com.example.dogbreedsgallery.ui.theme.DogBreedsGalleryTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 
 
 class MainActivity : ComponentActivity() {
@@ -45,6 +48,7 @@ class MainActivity : ComponentActivity() {
                 val breeds by homeViewModel.breeds.collectAsState()
                 val isLoading by homeViewModel.isLoading.collectAsState()
                 val error by homeViewModel.error.collectAsState()
+                val searchQuery by homeViewModel.searchQuery.collectAsState()
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize()
@@ -56,8 +60,23 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
+                        verticalArrangement = Arrangement.Center,
+
+                    )
+
+                    {
+                        OutlinedTextField(
+                            value = searchQuery,
+                            onValueChange = homeViewModel::onSearchQueryChange,
+                            modifier = Modifier.fillMaxWidth(),
+                            label = {
+                                Text("Поиск породы")
+                            },
+                            placeholder = {
+                                Text("Например, Labrador")
+                            },
+                            singleLine = true
+                        )
 
                         when {
                             isLoading && breeds.isEmpty() -> {
