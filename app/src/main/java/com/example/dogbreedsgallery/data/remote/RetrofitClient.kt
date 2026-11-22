@@ -1,7 +1,11 @@
+
 package com.example.dogbreedsgallery.data.remote
 
+import com.example.dogbreedsgallery.BuildConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -13,8 +17,25 @@ object RetrofitClient {
         .add(KotlinJsonAdapterFactory())
         .build()
 
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BASIC
+    }
+
+    private val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor { chain ->
+            val request = chain.request()
+                .newBuilder()
+                .addHeader("x-api-key", BuildConfig.DOG_API_KEY)
+                .build()
+
+            chain.proceed(request)
+        }
+        .addInterceptor(loggingInterceptor)
+        .build()
+
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
+        .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
