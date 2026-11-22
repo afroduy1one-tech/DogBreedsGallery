@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
@@ -67,8 +68,7 @@ dependencies {
     implementation(libs.okhttp.logging)
 
     // Moshi
-    implementation(libs.moshi)
-
+    implementation(libs.moshi.kotlin)
     // Coil
     implementation(libs.coil.compose)
 
@@ -79,4 +79,6 @@ dependencies {
     // Navigation 3
     implementation(libs.navigation3.runtime)
     implementation(libs.navigation3.ui)
+
+    implementation(libs.moshi.kotlin)
 }
